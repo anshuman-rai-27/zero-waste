@@ -5,8 +5,13 @@ import { Icon } from 'leaflet';
 import { useMemo } from 'react';
 
 const personIcon = new Icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/847/847969.png',
-  iconSize: [25, 25],
+  iconUrl: '/mapImages/customer2.png',
+  iconSize: [30, 30],
+});
+
+const machineIcon = new Icon({
+  iconUrl: '/mapImages/machine.png',
+  iconSize: [40, 40],
 });
 
 function getCentroid(coords) {
@@ -23,7 +28,7 @@ function Map(){
 
     return(
         <div className='w-full h-[500px] mt-10'>
-            <MapContainer center={[23.3441, 85.3096]} zoom={13} scrollWheelZoom={true}
+            <MapContainer center={[23.3441, 85.3096]} zoom={14} scrollWheelZoom={true}
                 className='w-full h-full'
             >
                 <TileLayer
@@ -37,7 +42,7 @@ function Map(){
                     </Marker>
                 ))}
         
-                <Marker position={[center.lat, center.lng]}>
+                <Marker position={[center.lat, center.lng]} icon={machineIcon}>
                     <Popup>Suggested RVM Location (Center)</Popup>
                 </Marker>
             </MapContainer>
