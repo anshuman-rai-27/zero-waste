@@ -14,16 +14,18 @@ export default function LoginPage() {
       alert("Please enter both email and password.");
       return;
     }
-    if (role === 'vendor') {
-      router.push('/visualizer');
-    } else if (role === 'customer') {
-      router.push('/customer');
-    } else if (role === 'admin') {
-      router.push('/map');
-    } else {
-      // For now, do nothing for other roles
-      alert('Only vendor login is implemented for demo.');
-    }
+    setTimeout(() => {
+      if (role === 'vendor') {
+        router.push('/visualizer');
+      } else if (role === 'customer') {
+        router.push('/pickup');
+      } else if (role === 'admin') {
+        router.push('/map');
+      } else {
+        // For now, do nothing for other roles
+        alert('Only vendor login is implemented for demo.');
+      }
+    }, 2000);
   };
 
   return (
