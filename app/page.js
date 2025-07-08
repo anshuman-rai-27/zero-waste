@@ -50,6 +50,12 @@ export default function Home() {
             Read our docs
           </a>
         </div>
+        <a
+          className="mt-8 rounded-full border border-solid border-blue-500 transition-colors flex items-center justify-center bg-blue-600 text-white gap-2 hover:bg-blue-700 font-medium text-base h-12 px-6 w-full sm:w-auto shadow-lg"
+          href="/pickup"
+        >
+          Go to Cardboard Collection
+        </a>
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
         <a
