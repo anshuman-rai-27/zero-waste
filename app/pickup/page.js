@@ -156,7 +156,7 @@ export default function PickupPage() {
       <div className="relative -mt-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-2 mb-8">
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 justify-center">
               {[
                 { id: 'status', label: 'Live Status', icon: <TrendingUp className="w-4 h-4" /> },
                 { id: 'rewards', label: 'Rewards', icon: <Wallet className="w-4 h-4" /> },
