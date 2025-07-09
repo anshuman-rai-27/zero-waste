@@ -60,7 +60,7 @@ function Map(){
             </div>
 
             <div className={`w-full md:w-3/4 h-full transition-all duration-300 overflow-hidden ${loading ? 'filter blur-[3px]' : ''}`}>
-                <MapContainer center={[23.3441, 85.3096]} zoom={16} scrollWheelZoom={true}
+                <MapContainer center={[23.3441, 85.3096]} zoom={14} scrollWheelZoom={true}
                     className='w-[90%] h-full mx-auto'
                 >
                     <TileLayer
