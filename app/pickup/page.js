@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Truck, Package, Clock, MapPin, Bell, Calendar, Star, Phone, Mail, MessageCircle, HelpCircle, Award, Users, TrendingUp, Shield, Leaf, Wallet, Gift, Coins, Zap, Target, Trophy, CheckCircle, Lock } from "lucide-react";
 import CollectionStatusDashboard from "../../components/collection-status-dashboard";
 import NotificationPermissionHandler from "../../components/notification-permission-handler";
@@ -8,7 +8,7 @@ import CollectorConfirmation from "../../components/collector-confirmation";
 
 export default function PickupPage() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('status');
+  const [activeTab, setActiveTab] = useState('marketplace');
 
   const handleNotify = useCallback(() => {
     setModalOpen(true);
@@ -16,6 +16,14 @@ export default function PickupPage() {
 
   const handleClose = useCallback(() => {
     setModalOpen(false);
+  }, []);
+
+  // Open notification modal 5 seconds after entering the page
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setModalOpen(true);
+    }, 5000);
+    return () => clearTimeout(timer);
   }, []);
 
   const pickupHistory = [
@@ -116,6 +124,25 @@ export default function PickupPage() {
     }
   };
 
+  // Marketplace API state
+  const [products, setProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      setLoadingProducts(true);
+      try {
+        const res = await fetch('https://fakestoreapi.com/products?limit=12');
+        const data = await res.json();
+        setProducts(data);
+      } catch (e) {
+        setProducts([]);
+      }
+      setLoadingProducts(false);
+    }
+    fetchProducts();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       {/* Navigation Tabs - Hidden on mobile */}
@@ -124,7 +151,7 @@ export default function PickupPage() {
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-2 mb-8">
             <div className="flex flex-wrap gap-2 justify-center">
               {[
-                { id: 'status', label: 'Live Status', icon: <TrendingUp className="w-4 h-4" /> },
+                { id: 'marketplace', label: 'Marketplace', icon: <Gift className="w-4 h-4" /> },
                 { id: 'rewards', label: 'Rewards', icon: <Wallet className="w-4 h-4" /> },
                 { id: 'history', label: 'History', icon: <Calendar className="w-4 h-4" /> },
                 { id: 'tips', label: 'Tips', icon: <HelpCircle className="w-4 h-4" /> },
@@ -154,7 +181,7 @@ export default function PickupPage() {
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Truck className="w-6 h-6 text-green-600" />
-            <h1 className="text-lg font-bold text-gray-900">Cardboard Collect</h1>
+            <h1 className="text-lg font-bold text-gray-900">Wallsmart</h1>
           </div>
           <div className="bg-gray-100 rounded-full p-2">
             <Bell className="w-5 h-5 text-gray-600" />
@@ -166,61 +193,45 @@ export default function PickupPage() {
       <main className="relative px-4 pb-24 sm:px-6 lg:px-8 md:pb-12">
         <div className="max-w-4xl mx-auto">
           
-          {/* Status Tab */}
-          {activeTab === 'status' && (
-            <>
-              {/* Status Dashboard */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
-                <div className="text-center mb-5">
-                  <h2 className="text-xl font-bold text-gray-900 mb-1">Collection Status</h2>
-                  <p className="text-gray-600 text-sm">Current pickup availability in your area</p>
-                </div>
-                <CollectionStatusDashboard />
+          {/* Marketplace Tab */}
+          {activeTab === 'marketplace' && (
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
+              {/* Carousel */}
+              <div className="mb-6">
+                <h2 className="text-lg font-bold text-gray-900 mb-2">Featured Products</h2>
+                {loadingProducts ? (
+                  <div className="text-gray-500 text-sm py-8 text-center">Loading featured products...</div>
+                ) : (
+                  <div className="flex overflow-x-auto gap-4 pb-2">
+                    {products.slice(0, 4).map((item) => (
+                      <div key={item.id} className="min-w-[180px] bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-4 border border-gray-200 flex flex-col items-center">
+                        <img src={item.image} alt={item.title} className="w-20 h-20 object-contain mb-2" />
+                        <div className="font-semibold text-gray-900 text-base mb-1 text-center">{item.title}</div>
+                        <div className="font-bold text-green-700 mb-2">₹{Math.round(item.price * 85)}</div>
+                        <button className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-blue-700 transition-colors">Buy Now</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-
-              {/* Notification Section */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="bg-blue-100 rounded-full p-2">
-                    <Bell className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold text-gray-900">Notifications</h2>
-                    <p className="text-gray-600 text-sm">Stay updated on collector availability</p>
-                  </div>
-                </div>
-                <NotificationPermissionHandler />
-              </div>
-
-              {/* Real-time Tracking */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="bg-green-100 rounded-full p-2">
-                    <MapPin className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold text-gray-900">Real-time Tracking</h2>
-                    <p className="text-gray-600 text-sm">Track collector location and ETA</p>
-                  </div>
-                </div>
-                <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4 border border-green-200">
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-green-600">2.3 km</div>
-                      <div className="text-xs text-gray-600">Distance</div>
+              {/* Product Grid */}
+              <h2 className="text-lg font-bold text-gray-900 mb-4">All Products</h2>
+              {loadingProducts ? (
+                <div className="text-gray-500 text-sm py-8 text-center">Loading products...</div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {products.map((product) => (
+                    <div key={product.id} className="bg-gray-50 rounded-xl p-4 border border-gray-200 flex flex-col items-center">
+                      <img src={product.image} alt={product.title} className="w-20 h-20 object-contain mb-3" />
+                      <h3 className="font-semibold text-gray-900 text-base mb-1 text-center">{product.title}</h3>
+                      <p className="text-xs text-gray-600 mb-2 text-center line-clamp-2">{product.description}</p>
+                      <div className="font-bold text-green-700 mb-2">₹{Math.round(product.price * 85)}</div>
+                      <button className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-green-700 transition-colors">Add to Cart</button>
                     </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-blue-600">15 min</div>
-                      <div className="text-xs text-gray-600">ETA</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-purple-600">3 stops</div>
-                      <div className="text-xs text-gray-600">Before you</div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              </div>
-            </>
+              )}
+            </div>
           )}
 
           {/* Rewards Tab */}
@@ -579,7 +590,7 @@ export default function PickupPage() {
       <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-lg z-40 md:hidden">
         <div className="flex justify-around">
           {[
-            { id: 'status', label: 'Status', icon: <TrendingUp className="w-5 h-5" /> },
+            { id: 'marketplace', label: 'Shop', icon: <Gift className="w-5 h-5" /> },
             { id: 'rewards', label: 'Rewards', icon: <Wallet className="w-5 h-5" /> },
             { id: 'history', label: 'History', icon: <Calendar className="w-5 h-5" /> },
             { id: 'tips', label: 'Tips', icon: <HelpCircle className="w-5 h-5" /> },
@@ -591,7 +602,7 @@ export default function PickupPage() {
               className={`flex flex-col items-center p-3 flex-1 min-w-0 ${
                 activeTab === tab.id 
                   ? `${
-                      tab.id === 'status' ? 'text-blue-600' :
+                      tab.id === 'marketplace' ? 'text-yellow-600' :
                       tab.id === 'rewards' ? 'text-green-600' :
                       tab.id === 'history' ? 'text-purple-600' :
                       tab.id === 'tips' ? 'text-orange-600' :

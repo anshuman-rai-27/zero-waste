@@ -15,7 +15,7 @@ export const scaleZ = visBed.length / realBed.length; // length (Z)
 const bedOrigin = { x: -20.5, y: 2, z: -80 };
 
 function CargoForm({ onRawBoxesChange }) {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState({ 
     name: '', length: '', width: '', height: '', quantity: 1, weight: '',
   });
 
