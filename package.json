@@ -14,6 +14,8 @@
     "binpackingjs": "^3.0.2",
     "drei": "^2.2.21",
     "leaflet": "^1.9.4",
+    "framer-motion": "^12.23.0",
+    "lucide-react": "^0.525.0",
     "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

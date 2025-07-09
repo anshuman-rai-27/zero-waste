@@ -1,16 +1,3 @@
-// import React from 'react';
-// import BinVisualizer from '../../components/BinVisualizer';
-
-// export default function VisualizerPage() {
-//   return (
-//     <div style={{ padding: '2rem' }}>
-//       <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '1rem' }}>
-//         3D Packaging Visualizer
-//       </h1>
-//       <BinVisualizer />
-//     </div>
-//   );
-// }
 'use client'
 import TruckWithBoxes from '../../components/TruckWithBoxes'
 import { useState } from 'react';
@@ -166,6 +153,18 @@ function VisualizerContent() {
   const { boxes, setBoxes } = useBoxes();
   const [rawBoxes, setRawBoxes] = useState([]); // store original box data
   const [skippedBoxes, setSkippedBoxes] = useState([]);
+  const [packagingMode, setPackagingMode] = useState('dynamic'); // 'dynamic' or 'uniform'
+
+  // Keyboard shortcut: 'c' toggles mode
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'c' || e.key === 'C') {
+        setPackagingMode((prev) => (prev === 'dynamic' ? 'uniform' : 'dynamic'));
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // On add or rearrange, always arrange from rawBoxes
   const handleBoxesChange = (newRawBoxes) => {
@@ -184,11 +183,94 @@ function VisualizerContent() {
     handleBoxesChange(rawBoxes);
   };
 
+  // --- Stats calculations ---
+  const totalBoxes = boxes.length;
+  const bedVolume = bed.length * bed.width * bed.height;
+  const totalBoxVolume = boxes.reduce((sum, b) => sum + (b.width * b.height * b.depth), 0);
+  const spaceUtilization = bedVolume > 0 ? (totalBoxVolume / bedVolume) * 100 : 0;
+  // Packaging cost: uniform = baseCost * totalBoxes; dynamic = baseCost * (1 + 0.2*levelIndex) per box
+  const baseCost = 10; // arbitrary unit cost per box
+  const maxLayer = Math.max(...boxes.map(b => b.layerIndex || 0));
+  const uniformCost = boxes.length * baseCost * (1 + 0.2 * maxLayer);
+
+  // const uniformCost = totalBoxes * baseCost;
+  const dynamicCost = boxes.reduce((sum, b) => sum + baseCost * (1 + 0.2 * (b.layerIndex || 0)), 0);
+  const packagingSaved = uniformCost > 0 ? ((uniformCost - dynamicCost) / uniformCost) * 100 : 0;
+
   return (
     <main className="flex flex-col md:flex-row items-start p-4 min-h-screen gap-4">
       {/* Left: Box List and Form */}
       <div className="w-full md:w-1/3 max-w-md bg-white bg-opacity-90 rounded-xl shadow-md p-6 border border-gray-200">
         <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">3D Truck Packaging Visualizer</h1>
+        <div className="mb-4 flex justify-between items-center">
+          <span className="font-semibold text-gray-700">Comparison Mode:</span>
+          <button
+            onClick={() => setPackagingMode(packagingMode === 'dynamic' ? 'uniform' : 'dynamic')}
+            className={`px-3 py-1 rounded font-bold shadow ${packagingMode === 'dynamic' ? 'bg-blue-600 text-white' : 'bg-red-600 text-white'}`}
+            title="Toggle packaging mode (or press 'C')"
+          >
+            {packagingMode === 'dynamic' ? 'Dynamic (Pressure-Aware)' : 'Uniform (All Red)'}
+          </button>
+        </div>
+        {/* Info Section: Packaging Layer Explanation */}
+        <div className="mb-6 bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-800">
+          <h2 className="font-bold text-base mb-2">How Dynamic Packaging Works</h2>
+          <div className="mb-2">Packaging strength is adjusted by layer in the truck:</div>
+          <table className="min-w-full text-xs mb-3">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="px-2 py-1 text-left font-semibold">Layer</th>
+                <th className="px-2 py-1 text-left font-semibold">Packaging Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b">
+                <td className="px-2 py-1">Bottom layer</td>
+                <td className="px-2 py-1">Stronger boxes, more cushioning, reinforced corners</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-2 py-1">Middle layer</td>
+                <td className="px-2 py-1">Standard packaging (default thickness)</td>
+              </tr>
+              <tr>
+                <td className="px-2 py-1">Top layer</td>
+                <td className="px-2 py-1">Lightweight packaging, minimal cushioning</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="flex items-center mb-1"><span className="mr-2">📦</span><span className="font-semibold">Example:</span></div>
+          <div className="mb-1">A batch of electric toothbrush boxes going into a truck:</div>
+          <table className="min-w-full text-xs">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="px-2 py-1 text-left font-semibold">Box</th>
+                <th className="px-2 py-1 text-left font-semibold">Position in Truck</th>
+                <th className="px-2 py-1 text-left font-semibold">Packaging Layer</th>
+                <th className="px-2 py-1 text-left font-semibold">Packaging Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b">
+                <td className="px-2 py-1">Box A</td>
+                <td className="px-2 py-1">Bottom layer</td>
+                <td className="px-2 py-1">2</td>
+                <td className="px-2 py-1">Double-walled box + foam</td>
+              </tr>
+              <tr className="border-b">
+                <td className="px-2 py-1">Box B</td>
+                <td className="px-2 py-1">Middle layer</td>
+                <td className="px-2 py-1">1</td>
+                <td className="px-2 py-1">Normal corrugated box</td>
+              </tr>
+              <tr>
+                <td className="px-2 py-1">Box C</td>
+                <td className="px-2 py-1">Top layer</td>
+                <td className="px-2 py-1">0</td>
+                <td className="px-2 py-1">Thin sleeve or air wrap</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         {/* Table of Added Boxes */}
         {rawBoxes.length > 0 && (
           <div className="mb-6 overflow-x-auto">
@@ -254,8 +336,19 @@ function VisualizerContent() {
         )}
       </div>
       {/* Right: Visualizer */}
-      <div className="w-full md:w-2/3">
-        <TruckWithBoxes boxes={boxes} />
+      <div className="w-full md:w-2/3 relative">
+        {/* Stats HUD/Panel */}
+        <div className="absolute top-4 right-4 bg-gray-100 bg-opacity-90 rounded-lg shadow-lg p-4 border border-gray-300 z-10 min-w-[220px]">
+          <h2 className="font-bold text-lg mb-2 text-gray-800">Stats</h2>
+          <div className="text-gray-700 text-sm space-y-1">
+            <div><span className="font-semibold">Total Containers:</span> {totalBoxes}</div>
+            <div><span className="font-semibold">Packaging Cost (Uniform):</span> <span className="text-red-700 font-bold">{uniformCost.toFixed(0)}</span></div>
+            <div><span className="font-semibold">Packaging Cost (Dynamic):</span> <span className="text-blue-700 font-bold">{dynamicCost.toFixed(0)}</span></div>
+            <div><span className="font-semibold">% Packaging Saved:</span> <span className="text-green-700 font-bold">{packagingSaved.toFixed(1)}%</span></div>
+            <div><span className="font-semibold">Space Utilization:</span> <span className="text-purple-700 font-bold">{spaceUtilization.toFixed(1)}%</span></div>
+          </div>
+        </div>
+        <TruckWithBoxes boxes={boxes} packagingMode={packagingMode} />
       </div>
     </main>
   );

@@ -7,7 +7,8 @@ import { dummyBoxes } from '../lib/dummyData'
 import TruckModel from './TruckModel'
 import { useBoxes } from './BoxesContext'
 
-function Box({ box }) {
+function Box({ box, packagingMode }) {
+  const color = packagingMode === 'uniform' ? '#e53935' : box.color;
   return (
     <group>
       {/* Solid box */}
@@ -18,7 +19,7 @@ function Box({ box }) {
       ]}
       >
         <boxGeometry args={[box.width, box.height, box.depth]} />
-        <meshStandardMaterial color={box.color} />
+        <meshStandardMaterial color={color} />
       </mesh>
       {/* Wireframe outline */}
       <mesh position={[
@@ -34,7 +35,7 @@ function Box({ box }) {
   )
 }
 
-export default function TruckWithBoxes({ boxes: propBoxes }) {
+export default function TruckWithBoxes({ boxes: propBoxes, packagingMode = 'dynamic' }) {
   const { boxes: contextBoxes } = useBoxes();
   const renderBoxes = propBoxes && propBoxes.length > 0 ? propBoxes : (contextBoxes && contextBoxes.length > 0 ? contextBoxes : dummyBoxes);
   return (
@@ -57,7 +58,7 @@ export default function TruckWithBoxes({ boxes: propBoxes }) {
         </Suspense>
 
         {renderBoxes.map((box) => (
-          <Box key={box.id} box={box} />
+          <Box key={box.id} box={box} packagingMode={packagingMode} />
         ))}
         {/* Truck Bed */}
         <mesh position={[2, 38.1, -31]}  scale={30} >
