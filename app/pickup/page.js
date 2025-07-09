@@ -1,6 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
-import { Truck, Package, Clock, MapPin, Bell, Calendar, Star, Phone, Mail, MessageCircle, HelpCircle, Award, Users, TrendingUp, Shield, Leaf } from "lucide-react";
+import { Truck, Package, Clock, MapPin, Bell, Calendar, Star, Phone, Mail, MessageCircle, HelpCircle, Award, Users, TrendingUp, Shield, Leaf, Wallet, Gift, Coins, Zap, Target, Trophy, CheckCircle, Lock } from "lucide-react";
 import CollectionStatusDashboard from "../../components/collection-status-dashboard";
 import NotificationPermissionHandler from "../../components/notification-permission-handler";
 import NotificationService from "../../components/notification-service";
@@ -24,6 +24,61 @@ export default function PickupPage() {
     { date: "2024-01-05", time: "3:15 PM", collector: "Ramesh", weight: "15 kg", status: "Completed", rating: 4 },
   ];
 
+  const rewards = [
+    {
+      id: 1,
+      title: "First Pickup Bonus",
+      description: "Complete your first cardboard pickup",
+      points: 100,
+      status: "completed",
+      icon: <Gift className="w-5 h-5" />,
+      date: "2024-01-05",
+      reward: "₹50 Cashback"
+    },
+    {
+      id: 2,
+      title: "Eco Warrior",
+      description: "Collect 50kg of cardboard",
+      points: 250,
+      status: "completed",
+      icon: <Leaf className="w-5 h-5" />,
+      date: "2024-01-10",
+      reward: "₹100 Cashback"
+    },
+    {
+      id: 3,
+      title: "Consistent Collector",
+      description: "Complete 5 pickups in a month",
+      points: 500,
+      status: "in-progress",
+      icon: <Target className="w-5 h-5" />,
+      date: "2024-01-15",
+      reward: "₹200 Cashback",
+      progress: 3,
+      total: 5
+    },
+    {
+      id: 4,
+      title: "Heavy Lifter",
+      description: "Collect 100kg of cardboard",
+      points: 750,
+      status: "locked",
+      icon: <Trophy className="w-5 h-5" />,
+      date: "2024-01-20",
+      reward: "₹300 Cashback"
+    },
+    {
+      id: 5,
+      title: "Monthly Champion",
+      description: "Complete 10 pickups in a month",
+      points: 1000,
+      status: "locked",
+      icon: <Award className="w-5 h-5" />,
+      date: "2024-01-25",
+      reward: "₹500 Cashback"
+    }
+  ];
+
   const faqs = [
     {
       question: "What types of cardboard do you accept?",
@@ -42,6 +97,24 @@ export default function PickupPage() {
       answer: "We currently cover Koramangala and surrounding areas. Our service area is expanding regularly. Contact us to check if we serve your location."
     }
   ];
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'completed': return 'text-green-600 bg-green-100';
+      case 'in-progress': return 'text-blue-600 bg-blue-100';
+      case 'locked': return 'text-gray-500 bg-gray-100';
+      default: return 'text-gray-500 bg-gray-100';
+    }
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'completed': return <CheckCircle className="w-4 h-4" />;
+      case 'in-progress': return <Clock className="w-4 h-4" />;
+      case 'locked': return <Lock className="w-4 h-4" />;
+      default: return <Clock className="w-4 h-4" />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
@@ -86,22 +159,23 @@ export default function PickupPage() {
             <div className="flex flex-wrap gap-2">
               {[
                 { id: 'status', label: 'Live Status', icon: <TrendingUp className="w-4 h-4" /> },
-                { id: 'history', label: 'Pickup History', icon: <Calendar className="w-4 h-4" /> },
-                { id: 'tips', label: 'Collection Tips', icon: <HelpCircle className="w-4 h-4" /> },
+                { id: 'rewards', label: 'Rewards', icon: <Wallet className="w-4 h-4" /> },
+                { id: 'history', label: 'History', icon: <Calendar className="w-4 h-4" /> },
+                { id: 'tips', label: 'Tips', icon: <HelpCircle className="w-4 h-4" /> },
                 { id: 'faq', label: 'FAQ', icon: <MessageCircle className="w-4 h-4" /> },
                 { id: 'contact', label: 'Contact', icon: <Phone className="w-4 h-4" /> }
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-all text-sm ${
                     activeTab === tab.id
                       ? 'bg-blue-600 text-white shadow-md'
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
                   {tab.icon}
-                  {tab.label}
+                  <span className="hidden sm:inline">{tab.label}</span>
                 </button>
               ))}
             </div>
@@ -168,6 +242,140 @@ export default function PickupPage() {
                 </div>
               </div>
             </>
+          )}
+
+          {/* Rewards Tab */}
+          {activeTab === 'rewards' && (
+            <div className="space-y-6">
+              {/* Wallet Overview */}
+              <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-xl">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
+                      <Wallet className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold">Your Green Wallet</h2>
+                      <p className="text-green-100 text-sm">Earn rewards for eco-friendly actions</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold">850</div>
+                    <div className="text-green-100 text-sm">Total Points</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Coins className="w-5 h-5" />
+                      <span className="font-semibold">Available</span>
+                    </div>
+                    <div className="text-2xl font-bold">₹350</div>
+                    <div className="text-green-100 text-sm">Cashback</div>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Zap className="w-5 h-5" />
+                      <span className="font-semibold">This Month</span>
+                    </div>
+                    <div className="text-2xl font-bold">3</div>
+                    <div className="text-green-100 text-sm">Pickups</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Rewards Timeline */}
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="bg-green-100 rounded-full p-2">
+                    <Award className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">Rewards Timeline</h2>
+                    <p className="text-gray-600">Complete challenges to unlock rewards</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  {rewards.map((reward, index) => (
+                    <div key={reward.id} className="relative">
+                      {/* Timeline Line */}
+                      {index < rewards.length - 1 && (
+                        <div className="absolute left-6 top-12 w-0.5 h-16 bg-gray-200"></div>
+                      )}
+                      
+                      <div className="flex items-start gap-4">
+                        {/* Status Icon */}
+                        <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${getStatusColor(reward.status)}`}>
+                          {getStatusIcon(reward.status)}
+                        </div>
+                        
+                        {/* Content */}
+                        <div className="flex-1 min-w-0 bg-gray-50 rounded-xl p-4 border border-gray-200">
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              {reward.icon}
+                              <h3 className="font-semibold text-gray-900">{reward.title}</h3>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-lg font-bold text-green-600">{reward.points}</div>
+                              <div className="text-xs text-gray-500">points</div>
+                            </div>
+                          </div>
+                          
+                          <p className="text-sm text-gray-600 mb-3">{reward.description}</p>
+                          
+                          {/* Progress Bar for in-progress */}
+                          {reward.status === 'in-progress' && (
+                            <div className="mb-3">
+                              <div className="flex justify-between text-xs text-gray-500 mb-1">
+                                <span>Progress</span>
+                                <span>{reward.progress}/{reward.total}</span>
+                              </div>
+                              <div className="w-full bg-gray-200 rounded-full h-2">
+                                <div 
+                                  className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                                  style={{ width: `${(reward.progress / reward.total) * 100}%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          )}
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Gift className="w-4 h-4 text-green-600" />
+                              <span className="text-sm font-medium text-green-600">{reward.reward}</span>
+                            </div>
+                            <span className="text-xs text-gray-500">{reward.date}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
+                <h3 className="font-bold text-gray-900 mb-4">Quick Actions</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <button className="bg-green-100 text-green-700 p-4 rounded-xl hover:bg-green-200 transition-colors">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Wallet className="w-5 h-5" />
+                      <span className="font-semibold">Redeem Points</span>
+                    </div>
+                    <p className="text-sm">Convert points to cashback</p>
+                  </button>
+                  <button className="bg-blue-100 text-blue-700 p-4 rounded-xl hover:bg-blue-200 transition-colors">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Gift className="w-5 h-5" />
+                      <span className="font-semibold">View History</span>
+                    </div>
+                    <p className="text-sm">See all your rewards</p>
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
 
           {/* History Tab */}
