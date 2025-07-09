@@ -22,7 +22,7 @@ const Vandings = ({ avgDistance, customerCount, wasteReduction, location, onClic
         </div>
         <div className="flex flex-col md:flex-row leading-none md:justify-between md:items-center">
           <span className="text-[7px] lg:text-xs text-gray-500">Projected Waste Reduction</span>
-          <span className="text-[7px] lg:text-sm text-black font-semibold pb-1">{wasteReduction}%</span>
+          <span className="text-[7px] lg:text-sm text-green-500 font-semibold pb-1">{wasteReduction}%</span>
         </div>
       </div>
     </section>
