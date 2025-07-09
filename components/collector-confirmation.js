@@ -125,7 +125,14 @@ export default function CollectorConfirmation({ open, onClose }) {
 function ResponseInterface({ response }) {
   const messages = {
     yes: {
-      icon: <CheckCircle className="text-green-500" size={32} />,
+      icon: (
+        <img
+          src="/tick.gif"
+          alt="Success"
+          className="w-16 h-16 mx-auto mb-2"
+          style={{ pointerEvents: 'none' }}
+        />
+      ),
       title: "Thank you!",
       message: "Ramesh has been notified and will arrive shortly.",
       bgColor: "bg-green-50",
