@@ -118,42 +118,8 @@ export default function PickupPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      {/* Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-green-600 text-white">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative px-4 py-8 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="flex justify-center mb-4">
-              <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
-                <Truck className="w-8 h-8 text-white" />
-              </div>
-            </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 tracking-tight">
-              Cardboard Collection
-            </h1>
-            <p className="text-xl sm:text-2xl text-blue-100 font-medium">
-              Real-time pickup status & notifications
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm">
-              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                <Package className="w-4 h-4" />
-                <span>Eco-friendly disposal</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                <Clock className="w-4 h-4" />
-                <span>Same-day pickup</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
-                <MapPin className="w-4 h-4" />
-                <span>Local coverage</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Navigation Tabs */}
-      <div className="relative -mt-8 px-4 sm:px-6 lg:px-8">
+      <div className="relative px-4 sm:px-6 lg:px-8 pt-8 hidden md:block">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-2 mb-8">
             <div className="flex flex-wrap gap-2 justify-center">
@@ -183,8 +149,8 @@ export default function PickupPage() {
         </div>
       </div>
 
-      {/* Main Content */}
-      <main className="relative px-4 pb-12 sm:px-6 lg:px-8">
+          {/* Main Content */}
+    <main className="relative px-4 pb-20 sm:px-6 lg:px-8 md:pb-12">
         <div className="max-w-4xl mx-auto">
           
           {/* Status Tab */}
@@ -597,12 +563,46 @@ export default function PickupPage() {
               </button>
             </div>
           </div>
-        </div>
-      </main>
+              </div>
+    </main>
 
-      {/* Hidden Components */}
-      <NotificationService onNotify={handleNotify} />
-      <CollectorConfirmation open={modalOpen} onClose={handleClose} />
+    {/* Floating Bottom Navigation */}
+    <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-lg z-40 md:hidden">
+      <div className="flex justify-around p-2">
+        {[
+          { id: 'status', label: 'Status', icon: <TrendingUp className="w-5 h-5" /> },
+          { id: 'rewards', label: 'Rewards', icon: <Wallet className="w-5 h-5" /> },
+          { id: 'history', label: 'History', icon: <Calendar className="w-5 h-5" /> },
+          { id: 'tips', label: 'Tips', icon: <HelpCircle className="w-5 h-5" /> },
+          { id: 'faq', label: 'FAQ', icon: <MessageCircle className="w-5 h-5" /> },
+          { id: 'contact', label: 'Contact', icon: <Phone className="w-5 h-5" /> }
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex flex-col items-center p-2 rounded-xl transition-all duration-300 flex-1 min-w-0 ${
+              activeTab === tab.id 
+                ? `${
+                    tab.id === 'status' ? 'text-blue-600 bg-blue-50' :
+                    tab.id === 'rewards' ? 'text-green-600 bg-green-50' :
+                    tab.id === 'history' ? 'text-purple-600 bg-purple-50' :
+                    tab.id === 'tips' ? 'text-orange-600 bg-orange-50' :
+                    tab.id === 'faq' ? 'text-blue-600 bg-blue-50' :
+                    'text-red-600 bg-red-50'
+                  }` 
+                : 'text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            {tab.icon}
+            <span className="text-xs mt-1">{tab.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
+
+    {/* Hidden Components */}
+    <NotificationService onNotify={handleNotify} />
+    <CollectorConfirmation open={modalOpen} onClose={handleClose} />
+  </div>
   );
 } 
