@@ -6,6 +6,7 @@ export default function LoginPage() {
   const [role, setRole] = useState('vendor');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = (e) => {
@@ -14,6 +15,7 @@ export default function LoginPage() {
       alert("Please enter both email and password.");
       return;
     }
+    setLoading(true);
     setTimeout(() => {
       if (role === 'vendor') {
         router.push('/visualizer');
@@ -25,6 +27,7 @@ export default function LoginPage() {
         // For now, do nothing for other roles
         alert('Only vendor login is implemented for demo.');
       }
+      setLoading(false);
     }, 2000);
   };
 
@@ -72,9 +75,21 @@ export default function LoginPage() {
           </div>
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-purple-600 via-blue-500 to-green-500 text-white font-bold py-2.5 rounded-lg shadow-lg hover:from-purple-700 hover:via-blue-600 hover:to-green-600 transition-all text-lg tracking-wide"
+            disabled={loading}
+            className={`w-full bg-gradient-to-r from-purple-600 via-blue-500 to-green-500 text-white font-bold py-2.5 rounded-lg shadow-lg transition-all text-lg tracking-wide ${
+              loading 
+                ? 'opacity-50 cursor-not-allowed' 
+                : 'hover:from-purple-700 hover:via-blue-600 hover:to-green-600'
+            }`}
           >
-            Login
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Logging in...
+              </div>
+            ) : (
+              'Login'
+            )}
           </button>
         </form>
       </div>
