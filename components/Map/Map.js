@@ -119,7 +119,7 @@ function Map(){
                 {/* vanding section */}
                 {showVM &&
                     <div className='mt-4'>
-                        <p className='text-[10px] md:text-md lg:text-lg font-semibold text-brown text-center drop-shadow-lg'>
+                        <p className='text-[10px] md:text-md lg:text-lg font-semibold text-blue-700 text-brown text-center drop-shadow-lg'>
                             Vending Insights
                         </p>
 
