@@ -39,7 +39,7 @@ export default function TruckWithBoxes({ boxes: propBoxes, packagingMode = 'dyna
   const { boxes: contextBoxes } = useBoxes();
   const renderBoxes = propBoxes && propBoxes.length > 0 ? propBoxes : (contextBoxes && contextBoxes.length > 0 ? contextBoxes : dummyBoxes);
   return (
-    <div className="w-full h-[80vh] border-2 border-red-500">
+    <div className="w-full h-[80vh] border-2 ">
       <Canvas camera={{ position: [50, 50, 200], fov: 50 }}
         style={{ background: '#e0e7ef' }}
       >

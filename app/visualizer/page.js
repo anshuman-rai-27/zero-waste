@@ -116,7 +116,7 @@ function arrangeBoxes(rawBoxes, bed) {
     }
     if (!placed) skipped.push(box);
   }
-
+   
   // Assign layerIndex and color based on sorted unique y positions (bottom = 0)
   const uniqueYs = Array.from(new Set(arranged.map(b => Math.round(b._rawLayerY * 1000) / 1000)));
   uniqueYs.sort((a, b) => a - b); // bottom to top
@@ -190,15 +190,15 @@ function VisualizerContent() {
   const spaceUtilization = bedVolume > 0 ? (totalBoxVolume / bedVolume) * 100 : 0;
   // Packaging cost: uniform = baseCost * totalBoxes; dynamic = baseCost * (1 + 0.2*levelIndex) per box
   const baseCost = 10; // arbitrary unit cost per box
-  const maxLayer = Math.max(...boxes.map(b => b.layerIndex || 0));
-  const uniformCost = boxes.length * baseCost * (1 + 0.2 * maxLayer);
+  const maxLayer = boxes.length > 0 ? Math.max(...boxes.map(b => b.layerIndex || 0)) : 0;
+  const uniformCost = boxes.length > 0 ? boxes.length * baseCost * (1 + 0.2 * maxLayer) : 0;
 
   // const uniformCost = totalBoxes * baseCost;
   const dynamicCost = boxes.reduce((sum, b) => sum + baseCost * (1 + 0.2 * (b.layerIndex || 0)), 0);
   const packagingSaved = uniformCost > 0 ? ((uniformCost - dynamicCost) / uniformCost) * 100 : 0;
 
   return (
-    <main className="flex flex-col md:flex-row items-start p-4 min-h-screen gap-4">
+    <main className="bg-gradient-to-br from-blue-50 via-white to-green-50 flex flex-col md:flex-row items-start p-4 min-h-screen gap-4">
       {/* Left: Box List and Form */}
       <div className="w-full md:w-1/3 max-w-md bg-white bg-opacity-90 rounded-xl shadow-md p-6 border border-gray-200">
         <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">3D Truck Packaging Visualizer</h1>
@@ -238,7 +238,7 @@ function VisualizerContent() {
               </tr>
             </tbody>
           </table>
-          <div className="flex items-center mb-1"><span className="mr-2">📦</span><span className="font-semibold">Example:</span></div>
+          {/* <div className="flex items-center mb-1"><span className="mr-2">📦</span><span className="font-semibold">Example:</span></div>
           <div className="mb-1">A batch of electric toothbrush boxes going into a truck:</div>
           <table className="min-w-full text-xs">
             <thead>
@@ -269,7 +269,7 @@ function VisualizerContent() {
                 <td className="px-2 py-1">Thin sleeve or air wrap</td>
               </tr>
             </tbody>
-          </table>
+          </table> */}
         </div>
         {/* Table of Added Boxes */}
         {rawBoxes.length > 0 && (
@@ -336,7 +336,7 @@ function VisualizerContent() {
         )}
       </div>
       {/* Right: Visualizer */}
-      <div className="w-full md:w-2/3 relative">
+      <div className="w-full md:w-2/3 relative bg-white bg-opacity-90 rounded-xl shadow-md p-6 border border-gray-200">
         {/* Stats HUD/Panel */}
         <div className="absolute top-4 right-4 bg-gray-100 bg-opacity-90 rounded-lg shadow-lg p-4 border border-gray-300 z-10 min-w-[220px]">
           <h2 className="font-bold text-lg mb-2 text-gray-800">Stats</h2>
