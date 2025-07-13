@@ -197,6 +197,13 @@ function VisualizerContent() {
   const dynamicCost = boxes.reduce((sum, b) => sum + baseCost * (1 + 0.2 * (b.layerIndex || 0)), 0);
   const packagingSaved = uniformCost > 0 ? ((uniformCost - dynamicCost) / uniformCost) * 100 : 0;
 
+  // Calculate layer-wise box counts
+  const layerCounts = {};
+  boxes.forEach(box => {
+    const layer = box.layerIndex || 0;
+    layerCounts[layer] = (layerCounts[layer] || 0) + 1;
+  });
+
   return (
     <main className="bg-gradient-to-br from-blue-50 via-white to-green-50 flex flex-col md:flex-row items-start p-4 min-h-screen gap-4">
       {/* Left: Box List and Form */}
@@ -274,26 +281,26 @@ function VisualizerContent() {
         {/* Table of Added Boxes */}
         {rawBoxes.length > 0 && (
           <div className="mb-6 overflow-x-auto">
-            <table className="min-w-full text-sm border border-gray-300 rounded-lg bg-gray-800">
+            <table className="min-w-full text-sm border border-gray-300 rounded-lg bg-gray-50">
               <thead>
-                <tr className="bg-gray-900 text-gray-100">
-                  <th className="px-2 py-2 font-semibold border-b border-gray-700">Name</th>
-                  <th className="px-2 py-2 font-semibold border-b border-gray-700">Length (cm)</th>
-                  <th className="px-2 py-2 font-semibold border-b border-gray-700">Width (cm)</th>
-                  <th className="px-2 py-2 font-semibold border-b border-gray-700">Height (cm)</th>
-                  <th className="px-2 py-2 font-semibold border-b border-gray-700">Weight (kg)</th>
-                  <th className="px-2 py-2 font-semibold border-b border-gray-700">Quantity</th>
+                <tr className="bg-gray-100 text-gray-700">
+                  <th className="px-2 py-2 font-semibold border-b border-gray-200">Name</th>
+                  <th className="px-2 py-2 font-semibold border-b border-gray-200">Length (cm)</th>
+                  <th className="px-2 py-2 font-semibold border-b border-gray-200">Width (cm)</th>
+                  <th className="px-2 py-2 font-semibold border-b border-gray-200">Height (cm)</th>
+                  <th className="px-2 py-2 font-semibold border-b border-gray-200">Weight (kg)</th>
+                  <th className="px-2 py-2 font-semibold border-b border-gray-200">Quantity</th>
                 </tr>
               </thead>
               <tbody>
                 {groupBoxesByDetails(rawBoxes).map((box, idx) => (
-                  <tr key={box.id || idx} className="even:bg-gray-700 odd:bg-gray-800 text-gray-100">
-                    <td className="px-2 py-1 border-b border-gray-700">{box.name}</td>
-                    <td className="px-2 py-1 border-b border-gray-700 text-center">{box.length}</td>
-                    <td className="px-2 py-1 border-b border-gray-700 text-center">{box.width}</td>
-                    <td className="px-2 py-1 border-b border-gray-700 text-center">{box.height}</td>
-                    <td className="px-2 py-1 border-b border-gray-700 text-center">{box.weight}</td>
-                    <td className="px-2 py-1 border-b border-gray-700 text-center font-bold">{box.quantity}</td>
+                  <tr key={box.id || idx} className="even:bg-gray-100 odd:bg-white text-gray-700">
+                    <td className="px-2 py-1 border-b border-gray-200">{box.name}</td>
+                    <td className="px-2 py-1 border-b border-gray-200 text-center">{box.length}</td>
+                    <td className="px-2 py-1 border-b border-gray-200 text-center">{box.width}</td>
+                    <td className="px-2 py-1 border-b border-gray-200 text-center">{box.height}</td>
+                    <td className="px-2 py-1 border-b border-gray-200 text-center">{box.weight}</td>
+                    <td className="px-2 py-1 border-b border-gray-200 text-center font-bold">{box.quantity}</td>
                   </tr>
                 ))}
               </tbody>
@@ -307,26 +314,26 @@ function VisualizerContent() {
           <div className="mt-4">
             <h2 className="font-bold text-red-700 mb-2">Skipped Boxes (Did not fit):</h2>
             <div className="overflow-x-auto">
-              <table className="min-w-full text-sm border border-gray-300 rounded-lg bg-gray-800">
+              <table className="min-w-full text-sm border border-gray-300 rounded-lg bg-gray-50">
                 <thead>
-                  <tr className="bg-gray-900 text-gray-100">
-                    <th className="px-2 py-2 font-semibold border-b border-gray-700">Name</th>
-                    <th className="px-2 py-2 font-semibold border-b border-gray-700">Length (cm)</th>
-                    <th className="px-2 py-2 font-semibold border-b border-gray-700">Width (cm)</th>
-                    <th className="px-2 py-2 font-semibold border-b border-gray-700">Height (cm)</th>
-                    <th className="px-2 py-2 font-semibold border-b border-gray-700">Weight (kg)</th>
-                    <th className="px-2 py-2 font-semibold border-b border-gray-700">Quantity</th>
+                  <tr className="bg-gray-100 text-gray-700">
+                    <th className="px-2 py-2 font-semibold border-b border-gray-200">Name</th>
+                    <th className="px-2 py-2 font-semibold border-b border-gray-200">Length (cm)</th>
+                    <th className="px-2 py-2 font-semibold border-b border-gray-200">Width (cm)</th>
+                    <th className="px-2 py-2 font-semibold border-b border-gray-200">Height (cm)</th>
+                    <th className="px-2 py-2 font-semibold border-b border-gray-200">Weight (kg)</th>
+                    <th className="px-2 py-2 font-semibold border-b border-gray-200">Quantity</th>
                   </tr>
                 </thead>
                 <tbody>
                   {groupBoxesByDetails(skippedBoxes).map((box, idx) => (
-                    <tr key={box.id || idx} className="even:bg-gray-700 odd:bg-gray-800 text-gray-100">
-                      <td className="px-2 py-1 border-b border-gray-700">{box.name}</td>
-                      <td className="px-2 py-1 border-b border-gray-700 text-center">{box.origLength || box.length}</td>
-                      <td className="px-2 py-1 border-b border-gray-700 text-center">{box.origWidth || box.width}</td>
-                      <td className="px-2 py-1 border-b border-gray-700 text-center">{box.origHeight || box.height}</td>
-                      <td className="px-2 py-1 border-b border-gray-700 text-center">{box.weight}</td>
-                      <td className="px-2 py-1 border-b border-gray-700 text-center font-bold">{box.quantity}</td>
+                    <tr key={box.id || idx} className="even:bg-gray-100 odd:bg-white text-gray-700">
+                      <td className="px-2 py-1 border-b border-gray-200">{box.name}</td>
+                      <td className="px-2 py-1 border-b border-gray-200 text-center">{box.origLength || box.length}</td>
+                      <td className="px-2 py-1 border-b border-gray-200 text-center">{box.origWidth || box.width}</td>
+                      <td className="px-2 py-1 border-b border-gray-200 text-center">{box.origHeight || box.height}</td>
+                      <td className="px-2 py-1 border-b border-gray-200 text-center">{box.weight}</td>
+                      <td className="px-2 py-1 border-b border-gray-200 text-center font-bold">{box.quantity}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -338,15 +345,37 @@ function VisualizerContent() {
       {/* Right: Visualizer */}
       <div className="w-full md:w-2/3 relative bg-white bg-opacity-90 rounded-xl shadow-md p-6 border border-gray-200">
         {/* Stats HUD/Panel */}
-        <div className="absolute top-4 right-4 bg-gray-100 bg-opacity-90 rounded-lg shadow-lg p-4 border border-gray-300 z-10 min-w-[220px]">
+        <div className="absolute bottom-4 right-4 bg-white bg-opacity-95 rounded-lg shadow-lg p-4 border border-gray-300 z-10 min-w-[220px]">
           <h2 className="font-bold text-lg mb-2 text-gray-800">Stats</h2>
           <div className="text-gray-700 text-sm space-y-1">
-            <div><span className="font-semibold">Total Containers:</span> {totalBoxes}</div>
-            <div><span className="font-semibold">Packaging Cost (Uniform):</span> <span className="text-red-700 font-bold">{uniformCost.toFixed(0)}</span></div>
-            <div><span className="font-semibold">Packaging Cost (Dynamic):</span> <span className="text-blue-700 font-bold">{dynamicCost.toFixed(0)}</span></div>
-            <div><span className="font-semibold">% Packaging Saved:</span> <span className="text-green-700 font-bold">{packagingSaved.toFixed(1)}%</span></div>
-            <div><span className="font-semibold">Space Utilization:</span> <span className="text-purple-700 font-bold">{spaceUtilization.toFixed(1)}%</span></div>
+            <div><span className="font-semibold">Total Containers:</span> <span className="text-gray-900 font-bold">{totalBoxes}</span></div>
+            <div><span className="font-semibold">Packaging Cost (Uniform):</span> <span className="text-red-600 font-bold">{uniformCost.toFixed(0)}</span></div>
+            <div><span className="font-semibold">Packaging Cost (Dynamic):</span> <span className="text-blue-600 font-bold">{dynamicCost.toFixed(0)}</span></div>
+            <div><span className="font-semibold">% Packaging Saved:</span> <span className="text-green-600 font-bold">{packagingSaved.toFixed(1)}%</span></div>
+            <div><span className="font-semibold">Space Utilization:</span> <span className="text-purple-600 font-bold">{spaceUtilization.toFixed(1)}%</span></div>
           </div>
+          {/* Layer-wise box counts table */}
+          {Object.keys(layerCounts).length > 0 && (
+            <div className="mt-3">
+              <h3 className="font-semibold text-sm text-gray-800 mb-1">Layer Distribution:</h3>
+              <table className="min-w-full text-xs bg-gray-50 rounded border border-gray-200">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="px-1 py-1 text-left font-semibold text-gray-700">Layer</th>
+                    <th className="px-1 py-1 text-center font-semibold text-gray-700">Boxes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.keys(layerCounts).sort((a, b) => parseInt(a) - parseInt(b)).map(layer => (
+                    <tr key={layer} className="border-b border-gray-200">
+                      <td className="px-1 py-1 text-left text-gray-600">{layer}</td>
+                      <td className="px-1 py-1 text-center font-bold text-gray-900">{layerCounts[layer]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
         <TruckWithBoxes boxes={boxes} packagingMode={packagingMode} />
       </div>
