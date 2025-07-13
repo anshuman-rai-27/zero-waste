@@ -1,17 +1,9 @@
-'use client'
-import { Puff } from "react-loader-spinner"
+import React from 'react';
 
-function Spinner(){
-    return (
-        <div className="absolute w-[100vw] h-[100vh] flex justify-center items-center bg-none z-50">
-            <Puff
-                height={80}
-                width={80}
-                color="red"
-                ariaLabel="loading"
-            />
-        </div>
-    )
+export default function Spinner() {
+  return (
+    <div className="flex justify-center items-center w-full h-full py-8">
+      <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-blue-500"></div>
+    </div>
+  );
 }
-
-export default Spinner

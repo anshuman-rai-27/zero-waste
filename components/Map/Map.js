@@ -110,7 +110,9 @@ function Map(){
             </div>
 
             {loading &&
-                <Spinner/>
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60">
+                  <Spinner />
+                </div>
             }
 
             <div className={`flex-1 min-h-0 z-0 transition-all duration-300 overflow-hidden ${loading ? 'filter blur-[3px]' : ''}`}>
