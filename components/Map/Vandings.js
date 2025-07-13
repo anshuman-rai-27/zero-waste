@@ -10,19 +10,19 @@ const Vandings = ({ avgDistance, customerCount, wasteReduction, location, onClic
       <div>
         <div className="flex flex-col md:flex-row leading-none md:justify-between md:items-center">
           <span className="text-[7px] lg:text-xs text-gray-500">Deployment Site</span>
-          <span className="text-[7px] lg:text-sm text-black font-semibold pb-1">{typeof location === 'object' ? location.name : location}</span>
+          <span className="text-[7px] lg:text-sm text-black font-semibold pb-1 pl-1">{typeof location === 'object' ? location.name : location}</span>
         </div>
         <div className="flex flex-col md:flex-row leading-none md:justify-between md:items-center">
           <span className="text-[7px] lg:text-xs text-gray-500">Average Customer Proximity</span>
-          <span className="text-[7px] lg:text-sm text-black font-semibold pb-1">{avgDistance.toFixed(1)} m</span>
+          <span className="text-[7px] lg:text-sm text-black font-semibold pb-1 pl-1">{avgDistance.toFixed(1)} m</span>
         </div>
         <div className="flex flex-col md:flex-row leading-none md:justify-between md:items-center">
           <span className="text-[7px] lg:text-xs text-gray-500">Engaged User Count</span>
-          <span className="text-[7px] lg:text-sm text-black font-semibold pb-1">{customerCount}</span>
+          <span className="text-[7px] lg:text-sm text-black font-semibold pb-1 pl-1">{customerCount}</span>
         </div>
         <div className="flex flex-col md:flex-row leading-none md:justify-between md:items-center">
           <span className="text-[7px] lg:text-xs text-gray-500">Projected Waste Reduction</span>
-          <span className="text-[7px] lg:text-sm text-green-500 font-semibold pb-1">{wasteReduction}%</span>
+          <span className="text-[7px] lg:text-sm text-green-500 font-semibold pb-1 pl-1">{wasteReduction}%</span>
         </div>
       </div>
     </section>
