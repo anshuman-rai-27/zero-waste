@@ -44,22 +44,21 @@ The 3D Truck Packaging Visualizer provides real-time statistics to help users un
 
 ### ML Model Usage (Current & Planned)
 
-**Repository For ML model used in project for packaging strength**: https://github.com/anshuman-rai-27/Packaging-Strength-ML
-
 #### Current Implementation
 - The current demo uses a rule-based 3D bin-packing algorithm (greedy, layer-by-layer) to arrange boxes in the truck bed. No ML model is used for packing in this version; all stats are computed from the arrangement.
+-  **Packaging Strength Prediction:**
+  - **Model:** Regression model (XGBoost)
+  - **Purpose:** To predict the required packaging strength for each box based on its position, weight, and the boxes above it.
+  - **How Used:** The model will recommend the minimum packaging material needed for each box, reducing waste and cost.
+  - **Repo**:https://github.com/anshuman-rai-27/Packaging-Strength-ML
 
 #### Planned ML Model Integrations
 - **1. Packing Optimization (Future):**
   - **Model:** Deep Reinforcement Learning (DRL) or Graph Neural Network (GNN)
   - **Purpose:** To learn optimal packing strategies that maximize space utilization and minimize packaging cost, outperforming greedy heuristics.
   - **How Used:** The model will take box dimensions, weights, and truck constraints as input and output the optimal placement sequence.
-- **2. Packaging Strength Prediction:**
-  - **Model:** Regression model (e.g., XGBoost, Random Forest, or Neural Network)
-  - **Purpose:** To predict the required packaging strength for each box based on its position, weight, and the boxes above it.
-  - **How Used:** The model will recommend the minimum packaging material needed for each box, reducing waste and cost.
-- **3. Damage Risk Estimation:**
-  - **Model:** Classification model (e.g., Logistic Regression, SVM, or Neural Network)
+- **2. Damage Risk Estimation:**
+  - **Model:** Classification model (Logistic Regression)
   - **Purpose:** To estimate the probability of box damage based on stacking order, box type, and packaging used.
   - **How Used:** The model will flag high-risk arrangements and suggest improvements.
 
