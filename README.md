@@ -44,6 +44,8 @@ The 3D Truck Packaging Visualizer provides real-time statistics to help users un
 
 ### ML Model Usage (Current & Planned)
 
+**Repository For ML model used in project for packaging strength**: https://github.com/anshuman-rai-27/Packaging-Strength-ML
+
 #### Current Implementation
 - The current demo uses a rule-based 3D bin-packing algorithm (greedy, layer-by-layer) to arrange boxes in the truck bed. No ML model is used for packing in this version; all stats are computed from the arrangement.
 
